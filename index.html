@@ -1,12 +1,319 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wanderly — Travel & Destinations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #0f172a; /* deep navy */
+      --glass: rgba(255,255,255,0.06);
+      --accent: linear-gradient(90deg,#ff7a7a 0%,#ffd27a 50%,#7ad1ff 100%);
+      --card-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      --glass-border: rgba(255,255,255,0.08);
+      --glass-2: rgba(255,255,255,0.03);
+      color-scheme: dark;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Outfit',system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(122,209,255,0.06), transparent 6%),
+                  radial-gradient(800px 400px at 90% 90%, rgba(255,122,122,0.04), transparent 6%),
+                  var(--bg1);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      color:#e6eef8;
+      padding:32px;
+    }
+
+    /* Container */
+    .wrap{max-width:1200px;margin:0 auto}
+
+    /* Header / Navbar */
+    header.navbar{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px
+    }
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:48px;height:48px;border-radius:12px;background:var(--accent);
+      display:grid;place-items:center;font-weight:800;color:#081028;
+      box-shadow:0 6px 18px rgba(0,0,0,0.5);
+      transform:translateZ(0);
+    }
+    .brand h1{font-size:18px;margin:0}
+    nav.links{display:flex;gap:14px;align-items:center}
+    nav.links a{color:rgba(230,238,248,0.8);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600;font-size:14px}
+    nav.links a:hover{background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));backdrop-filter:blur(4px)}
+
+    /* Search */
+    .search{flex:1;display:flex;justify-content:center}
+    .search .searchbox{
+      width:380px;max-width:60%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      border:1px solid var(--glass-border);padding:8px;border-radius:14px;display:flex;gap:8px;align-items:center
+    }
+    .search input{background:transparent;border:0;outline:none;color:inherit;font-size:14px;padding:6px}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-bottom:28px}
+    .hero-card{padding:28px;border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--glass-border);box-shadow:var(--card-shadow)}
+    .eyebrow{font-weight:600;color:#bcd6ff;font-size:13px}
+    .hero h2{margin:8px 0 12px;font-size:34px;line-height:1.02}
+    .hero p{color:rgba(230,238,248,0.78);margin:0 0 18px}
+    .cta-row{display:flex;gap:12px}
+    .btn{padding:10px 14px;border-radius:12px;font-weight:700;border:0;cursor:pointer}
+    .btn-primary{background:var(--accent);color:#081028;box-shadow:0 10px 25px rgba(122,209,255,0.08);}
+    .btn-ghost{background:transparent;border:1px solid var(--glass-border);color:rgba(230,238,248,0.9);backdrop-filter:blur(6px)}
+
+    /* Small stats */
+    .stats{display:flex;gap:12px;margin-top:18px}
+    .stat{background:var(--glass);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);min-width:120px;text-align:center}
+    .stat b{display:block;font-size:18px}
+
+    /* Filters */
+    .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .chip{padding:8px 12px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-border);cursor:pointer;font-weight:600}
+    .chip.active{background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));box-shadow:0 6px 18px rgba(2,6,23,0.45)}
+
+    /* Grid of cards */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{border-radius:14px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid var(--glass-border);box-shadow:var(--card-shadow);display:flex;flex-direction:column}
+    .card img{width:100%;height:170px;object-fit:cover;display:block}
+    .card-body{padding:14px;display:flex;flex-direction:column;gap:8px}
+    .card h3{margin:0;font-size:16px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{font-size:12px;padding:6px 8px;border-radius:8px;background:var(--glass-2);border:1px solid rgba(255,255,255,0.02)}
+    .price-row{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;display:none;place-items:center;background:linear-gradient(180deg,rgba(2,6,23,0.6), rgba(2,6,23,0.84));z-index:80}
+    .modal.open{display:grid}
+    .modal-card{width:min(880px,92vw);background:var(--bg1);border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.05)}
+
+    /* Responsive */
+    @media (max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}.search .searchbox{width:100%}.hero h2{font-size:26px}}
+
+    /* Small utilities */
+    .muted{color:rgba(230,238,248,0.7);font-size:13px}
+    .flex{display:flex;gap:8px;align-items:center}
+
+    /* subtle floating animation on hero image */
+    .floating{animation:float 6s ease-in-out infinite}
+    @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+  </style>
 </head>
 <body>
-    <h1>Welcome to Travel and Tracking</h1>
-    <p>Your gateway to exploring new destinations and keeping track of your journeys.</p>
+  <div class="wrap">
+    <header class="navbar">
+      <div class="brand">
+        <div class="logo">W</div>
+        <div>
+          <h1>Wanderly</h1>
+          <div class="muted" style="font-size:12px">Find your next great journey</div>
+        </div>
+      </div>
+
+      <div class="search">
+        <div class="searchbox">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input id="site-search" placeholder="Search destinations, e.g. Bali, Tokyo, Alps..." />
+        </div>
+      </div>
+
+      <nav class="links">
+        <a href="#">Home</a>
+        <a href="#">Destinations</a>
+        <a href="#">Trips</a>
+        <a href="#">Community</a>
+        <button class="btn btn-primary" id="signin">Sign in</button>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Explore</div>
+        <h2>Beautiful places. Curated trips. <br><span style="background:linear-gradient(90deg,#7ad1ff,#ffd27a);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900">Tailored for you</span></h2>
+        <p>Browse top-rated destinations, filter by vibe and budget, and open immersive guides with photos and travel tips.</p>
+        <div class="cta-row">
+          <button class="btn btn-primary" id="discover">Discover</button>
+          <button class="btn btn-ghost" id="plan">Start a Plan</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span class="muted">Verified trips</span><b>1,284</b></div>
+          <div class="stat"><span class="muted">Destinations</span><b>326</b></div>
+          <div class="stat"><span class="muted">Community</span><b>42k+</b></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="hero-card floating" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc" alt="beach" style="width:100%;height:200px;object-fit:cover;border-radius:10px;">
+          <div style="padding:6px 8px">
+            <div style="font-weight:800">Bali, Indonesia</div>
+            <div class="muted" style="font-size:13px">Sun-kissed beaches & rice terraces</div>
+          </div>
+        </div>
+
+        <div class="hero-card" style="padding:12px;display:flex;gap:10px;align-items:center">
+          <div style="flex:1">
+            <div style="font-weight:700">Plan with confidence</div>
+            <div class="muted" style="font-size:13px">Flexible bookings · Local guides · Trusted reviews</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn btn-primary" style="padding:8px 10px">Get deals</button>
+            <button class="btn" style="background:transparent;border:1px solid var(--glass-border);color:inherit">Gift cards</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h3 style="margin:0">Top destinations</h3>
+        <div class="muted">Showing <span id="count">9</span> results</div>
+      </div>
+
+      <div class="filters" id="filters">
+        <div class="chip active" data-filter="all">All</div>
+        <div class="chip" data-filter="beach">Beach</div>
+        <div class="chip" data-filter="mountain">Mountain</div>
+        <div class="chip" data-filter="city">City</div>
+        <div class="chip" data-filter="adventure">Adventure</div>
+        <div class="chip" data-filter="budget">Budget</div>
+      </div>
+
+      <div class="grid" id="grid">
+        <!-- Cards are injected by JS -->
+      </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+      <div class="modal-card" id="modalCard"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // SAMPLE data — replace with API calls as needed
+    const destinations = [
+      {id:1,title:'Bali, Indonesia',tags:['beach','budget'],price:699,img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc',desc:'Rice terraces, surf beaches and vibrant culture.'},
+      {id:2,title:'Zermatt, Switzerland',tags:['mountain','adventure'],price:1499,img:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=def',desc:'Alpine village below the Matterhorn — hiking & skiing.'},
+      {id:3,title:'Tokyo, Japan',tags:['city'],price:1199,img:'https://images.unsplash.com/photo-1549692520-acc6669e2f0c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=ghi',desc:'Neon nights, food markets, and serene temples.'},
+      {id:4,title:'Santorini, Greece',tags:['beach'],price:1299,img:'https://images.unsplash.com/photo-1505765054861-4c0b92d4a5b6?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=jkl',desc:'Whitewashed villages with caldera views.'},
+      {id:5,title:'Patagonia, Argentina',tags:['adventure','mountain'],price:1799,img:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=mno',desc:'Epic glaciers, trekking and remote wilderness.'},
+      {id:6,title:'Lisbon, Portugal',tags:['city','budget'],price:799,img:'https://images.unsplash.com/photo-1509460913899-6f8e0d6ff3a4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=pqr',desc:'Hills, pastel buildings, and great coastal trips.'},
+      {id:7,title:'Reykjavík, Iceland',tags:['adventure','budget'],price:1399,img:'https://images.unsplash.com/photo-1505672678657-cc7037095e7f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=stu',desc:'Northern lights, hot springs and volcanic landscapes.'},
+      {id:8,title:'Maui, Hawaii',tags:['beach','adventure'],price:1099,img:'https://images.unsplash.com/photo-1493558103817-58b2924bce98?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=vwx',desc:'Lush valleys, surf breaks and dramatic coastlines.'},
+      {id:9,title:'Prague, Czechia',tags:['city','budget'],price:699,img:'https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=yza',desc:'Historic streets, castles and charming squares.'}
+    ];
+
+    // Render grid
+    const grid = document.getElementById('grid');
+    const countEl = document.getElementById('count');
+    const render = (list) =>{
+      grid.innerHTML='';
+      list.forEach(d=>{
+        const card = document.createElement('article');
+        card.className='card';
+        card.innerHTML = `
+          <img src="${d.img}" alt="${d.title}">
+          <div class="card-body">
+            <h3>${d.title}</h3>
+            <div class="muted">${d.desc}</div>
+            <div class="tags">${d.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+            <div class="price-row">
+              <div><b>$${d.price}</b> <span class="muted">/ person</span></div>
+              <div class="flex"><button class="btn" data-id="${d.id}">View</button></div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      })
+      countEl.textContent = list.length;
+    }
+
+    // Initial render
+    render(destinations);
+
+    // Filters
+    const chips = document.querySelectorAll('.chip');
+    chips.forEach(ch=>ch.addEventListener('click', ()=>{
+      chips.forEach(c=>c.classList.remove('active'));
+      ch.classList.add('active');
+      const f = ch.dataset.filter;
+      if(f === 'all') render(destinations);
+      else render(destinations.filter(d => d.tags.includes(f)));
+    }));
+
+    // Search
+    const searchInput = document.getElementById('site-search');
+    searchInput.addEventListener('input', ()=>{
+      const q = searchInput.value.trim().toLowerCase();
+      const activeChip = document.querySelector('.chip.active')?.dataset.filter || 'all';
+      let list = destinations.filter(d=>d.title.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q) || d.tags.join(' ').includes(q));
+      if(activeChip !== 'all') list = list.filter(d=>d.tags.includes(activeChip));
+      render(list);
+    });
+
+    // Modal logic
+    const modal = document.getElementById('modal');
+    const modalCard = document.getElementById('modalCard');
+    document.addEventListener('click', (e)=>{
+      const viewBtn = e.target.closest('button[data-id]');
+      if(viewBtn){
+        const id = +viewBtn.dataset.id;
+        const d = destinations.find(x=>x.id===id);
+        openModal(d);
+      }
+    });
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+    function openModal(d){
+      modalCard.innerHTML = `
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <img src="${d.img}" alt="${d.title}" style="height:220px;width:360px;object-fit:cover;border-radius:8px;flex-shrink:0">
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:start">
+              <div>
+                <h2 style="margin:0">${d.title}</h2>
+                <div class="muted">${d.tags.join(' · ')}</div>
+              </div>
+              <div style="text-align:right"><b style="font-size:20px">$${d.price}</b><div class="muted">/ person</div></div>
+            </div>
+            <p style="margin-top:12px">${d.desc} Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. Cras ac felis nec arcu faucibus rhoncus.</p>
+            <div style="display:flex;gap:10px;margin-top:12px">
+              <button class="btn btn-primary">Book now</button>
+              <button class="btn" onclick="closeModal()">Close</button>
+            </div>
+          </div>
+        </div>
+      `;
+      modal.classList.add('open');
+    }
+    function closeModal(){ modal.classList.remove('open'); }
+
+    // Small interactions
+    document.getElementById('discover').addEventListener('click', ()=>{
+      document.querySelector('.chip[data-filter="beach"]').click();
+      window.scrollTo({top:document.querySelector('#grid').offsetTop-20,behavior:'smooth'});
+    });
+
+    // Keyboard: Esc to close
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+    // Example: Progressive enhancement spot for signing-in
+    document.getElementById('signin').addEventListener('click', ()=>{
+      alert('Sign-in flow placeholder — wire this to your auth provider.');
+    });
+
+    // Accessibility touches: focus styles
+    document.addEventListener('focusin', (e)=>{ if(e.target.matches('button,input')) e.target.style.outline='2px solid rgba(122,209,255,0.12)'; });
+    document.addEventListener('focusout', (e)=>{ if(e.target.matches('button,input')) e.target.style.outline='none'; });
+  </script>
 </body>
 </html>
